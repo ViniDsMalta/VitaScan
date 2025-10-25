@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Triagem Automática</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>Triagem Automática</h1>
+                <p>Sistema de avaliação inicial</p>
+            </div>
+            <a href="#" class="login-link">Login</a>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-number">1</div>
+            <h2 class="question-text">Qual é o principal sintoma que você está sentindo atualmente?</h2>
+            
+            <div class="input-container">
+                <input type="text" class="input-field" placeholder="Digite seu sintoma...">
+                <div class="suggestions-container">
+                    <!-- As sugestões serão inseridas aqui via JavaScript -->
+                </div>
+                <div class="error-message">Por favor, selecione uma das opções sugeridas.</div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="btn btn-primary" id="next-btn">Próxima Pergunta</button>
+            <button class="btn btn-secondary" id="back-btn" disabled>Voltar</button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-text">
+                <span>Progresso</span>
+                <span id="progress-percent">14%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <h3 class="results-title">Resumo das suas respostas</h3>
+            <div id="results-list">
+                <!-- As respostas serão inseridas aqui via JavaScript -->
+            </div>
+            <button class="btn btn-primary" id="restart-btn" style="margin-top: 20px;">Refazer Triagem</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
