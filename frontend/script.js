@@ -1,4 +1,4 @@
- // Banco de dados de perguntas e sugestões
+ 
         const questions = [
             {
                 id: 1,
@@ -72,15 +72,15 @@
         const resultsList = document.getElementById('results-list');
         const restartButton = document.getElementById('restart-btn');
 
-        // Inicializar a primeira pergunta
+      
         updateQuestion();
 
-        // Evento de input para mostrar sugestões
+        
         inputField.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const currentQuestion = questions[currentQuestionIndex];
             
-            // Limpar erro quando o usuário começar a digitar
+          
             clearError();
             
             if (value.length > 0) {
@@ -94,7 +94,7 @@
             }
         });
 
-        // Evento para quando uma sugestão é clicada
+        //sugestão clicada
         function setupSuggestionClick() {
             document.querySelectorAll('.suggestion-item').forEach(item => {
                 item.addEventListener('click', function() {
@@ -124,30 +124,30 @@
             setupSuggestionClick();
         }
 
-        // Esconder sugestões
+        
         function hideSuggestions() {
             suggestionsContainer.style.display = 'none';
         }
 
-        // Mostrar erro
+        // mostra erro
         function showError() {
             inputField.classList.add('error');
             errorMessage.style.display = 'block';
         }
 
-        // Limpar erro
+        // Limpa erro
         function clearError() {
             inputField.classList.remove('error');
             errorMessage.style.display = 'none';
         }
 
-        // Validar se a resposta está nas sugestões
+        // ver se a resposta existe
         function isValidAnswer(answer) {
             const currentQuestion = questions[currentQuestionIndex];
             return currentQuestion.suggestions.includes(answer);
         }
 
-        // Atualizar a pergunta atual
+        // trocar pergunta
         function updateQuestion() {
             const currentQuestion = questions[currentQuestionIndex];
             questionNumber.textContent = currentQuestion.id;
@@ -155,27 +155,27 @@
             inputField.value = answers[currentQuestion.id] || '';
             inputField.placeholder = `Digite sua resposta...`;
             
-            // Atualizar progresso
+            // barra de progresso
             const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
             progressBar.style.width = `${progress}%`;
             progressPercent.textContent = `${Math.round(progress)}%`;
             
-            // Atualizar estado dos botões
+            //resetar botõs
             backButton.disabled = currentQuestionIndex === 0;
             
-            // Limpar erros e sugestões
+            
             clearError();
             hideSuggestions();
             
-            // Focar no campo de entrada
+            
             inputField.focus();
         }
 
-        // Próxima pergunta
+        // passar pergunta
         nextButton.addEventListener('click', function() {
             const answer = inputField.value.trim();
             
-            // Validar se a resposta está vazia
+            // ver se é vazio
             if (answer === '') {
                 showError();
                 errorMessage.textContent = "Por favor, digite uma resposta.";
@@ -183,7 +183,7 @@
                 return;
             }
             
-            // Validar se a resposta está nas sugestões
+            // ver se existe a resposta
             if (!isValidAnswer(answer)) {
                 showError();
                 errorMessage.textContent = "Por favor, selecione uma das opções sugeridas.";
@@ -191,7 +191,7 @@
                 return;
             }
             
-            // Salvar resposta
+            // salvar
             const currentQuestion = questions[currentQuestionIndex];
             answers[currentQuestion.id] = answer;
             
@@ -212,34 +212,59 @@
             }
         });
 
-        // Mostrar resultados
-        function showResults() {
-            document.querySelector('.question-container').style.display = 'none';
-            document.querySelector('.button-container').style.display = 'none';
-            document.querySelector('.progress-container').style.display = 'none';
-            
-            resultsList.innerHTML = '';
-            questions.forEach(question => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'result-item';
-                
-                const questionElem = document.createElement('div');
-                questionElem.className = 'result-question';
-                questionElem.textContent = question.text;
-                
-                const answerElem = document.createElement('div');
-                answerElem.className = 'result-answer';
-                answerElem.textContent = answers[question.id] || 'Não respondida';
-                
-                resultItem.appendChild(questionElem);
-                resultItem.appendChild(answerElem);
-                resultsList.appendChild(resultItem);
-            });
-            
-            resultsContainer.style.display = 'block';
+    
+    async function showResults() {
+        document.querySelector('.question-container').style.display = 'none';
+        document.querySelector('.button-container').style.display = 'none';
+        document.querySelector('.progress-container').style.display = 'none';
+    
+        resultsList.innerHTML = '<div class="loading">Salvando triagem...</div>';
+        resultsContainer.style.display = 'block';
+
+    
+        const salvou = await enviarParaBackend(answers);
+        
+        if (!salvou) {
+            resultsList.innerHTML = `
+                <div class="empty-state">
+                    <h3>Erro ao salvar triagem</h3>
+                    <p>Por favor, tente novamente.</p>
+                    <button class="btn btn-primary" onclick="window.location.reload()">Recarregar</button>
+                </div>
+            `;
+            return;
         }
 
-        // Reiniciar triagem
+    
+        resultsList.innerHTML = '';
+        questions.forEach(question => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            
+            const questionElem = document.createElement('div');
+            questionElem.className = 'result-question';
+            questionElem.textContent = question.text;
+            
+            const answerElem = document.createElement('div');
+            answerElem.className = 'result-answer';
+            answerElem.textContent = answers[question.id] || 'Não respondida';
+            
+            resultItem.appendChild(questionElem);
+            resultItem.appendChild(answerElem);
+            resultsList.appendChild(resultItem);
+        });
+
+        
+        const successMsg = document.createElement('div');
+        successMsg.style.cssText = 'text-align: center; margin-top: 20px; padding: 15px; background: #d4edda; color: #155724; border-radius: 8px;';
+        successMsg.innerHTML = `
+            <strong>✅ Triagem concluída com sucesso!</strong><br>
+            <small>Suas respostas foram salvas no sistema.</small>
+        `;
+        resultsList.appendChild(successMsg);
+}
+
+        //reiniciar
         restartButton.addEventListener('click', function() {
             currentQuestionIndex = 0;
             answers = {};
@@ -271,3 +296,31 @@
                 }
             }
         });
+
+       
+async function enviarParaBackend(respostas) {
+    try {
+        const response = await fetch('http://localhost:3000/api/triagem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                respostas: respostas
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log('Triagem salva no banco de dados ID:', result.id);
+            return true;
+        } else {
+            console.error('Erro ao salvar:', result.message);
+            return false;
+        }
+    } catch (error) {
+        console.error('Erro de conexão:', error);
+        return false;
+    }
+}

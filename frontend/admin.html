@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Sistema de Triagem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .logo p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2575fc;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .pulseira {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid transparent;
+        }
+        
+        .pulseira-verde { background-color: #2ecc71; }
+        .pulseira-amarela { background-color: #f39c12; }
+        .pulseira-vermelha { background-color: #e74c3c; }
+        .pulseira-preta { background-color: #2c3e50; }
+        
+        .pulseira-selecionada {
+            border: 2px solid #2575fc;
+            transform: scale(1.1);
+        }
+        
+        .triagens-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 100px 1fr 150px 150px 150px;
+            gap: 15px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 150px 150px 150px;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            align-items: center;
+        }
+        
+        .table-row:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .acoes {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-acao {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-editar {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-cor {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .btn-excluir {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-editar:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-cor:hover {
+            background-color: #8e44ad;
+        }
+        
+        .btn-excluir:hover {
+            background-color: #c0392b;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e1e5ee;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+        
+        .cores-pulseira {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .opcao-cor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .opcao-cor:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .opcao-cor.selecionada {
+            background-color: #e3f2fd;
+            border: 2px solid #2575fc;
+        }
+        
+        .label-cor {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .btn-cancelar {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-salvar {
+            background-color: #2575fc;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Dashboard Admin</h1>
+                <p>Sistema de Triagem Automática</p>
+            </div>
+            <div class="user-menu">
+                <span>Bem-vindo, Admin</span>
+                <button class="btn btn-logout" onclick="logout()">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTriagens">0</div>
+                <div class="stat-label">Total de Triagens</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="triagensVerde">0</div>
+                <div class="stat-label">Pulseira Verde</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="triagensAmarela">0</div>
+                <div class="stat-label">Pulseira Amarela</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="triagensVermelha">0</div>
+                <div class="stat-label">Pulseira Vermelha</div>
+            </div>
+        </div>
+
+        <div class="triagens-table">
+            <div class="table-header">
+                <div>ID</div>
+                <div>Data/Hora</div>
+                <div>Pulseira</div>
+                <div>Sintoma Principal</div>
+                <div>Ações</div>
+            </div>
+            
+            <div id="triagensList">
+                <div class="loading">Carregando triagens...</div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h2>Editar Triagem</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editSintoma">Sintoma Principal</label>
+                    <input type="text" id="editSintoma" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTempo">Tempo do Sintoma</label>
+                    <input type="text" id="editTempo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editIntensidade">Intensidade</label>
+                    <input type="text" id="editIntensidade" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal" id="corModal">
+        <div class="modal-content">
+            <h2>Alterar Cor da Pulseira</h2>
+            <div class="form-group">
+                <label>Selecione a nova cor:</label>
+                <div class="cores-pulseira" id="coresContainer">
+                    <div class="opcao-cor" data-cor="verde" onclick="selecionarCor('verde')">
+                        <div class="pulseira pulseira-verde" style="width: 40px; height: 40px;"></div>
+                        <span class="label-cor">Verde</span>
+                    </div>
+                    <div class="opcao-cor" data-cor="amarela" onclick="selecionarCor('amarela')">
+                        <div class="pulseira pulseira-amarela" style="width: 40px; height: 40px;"></div>
+                        <span class="label-cor">Amarela</span>
+                    </div>
+                    <div class="opcao-cor" data-cor="vermelha" onclick="selecionarCor('vermelha')">
+                        <div class="pulseira pulseira-vermelha" style="width: 40px; height: 40px;"></div>
+                        <span class="label-cor">Vermelha</span>
+                    </div>
+                    <div class="opcao-cor" data-cor="preta" onclick="selecionarCor('preta')">
+                        <div class="pulseira pulseira-preta" style="width: 40px; height: 40px;"></div>
+                        <span class="label-cor">Preta</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancelar" onclick="fecharCorModal()">Cancelar</button>
+                <button type="button" class="btn btn-salvar" onclick="salvarCorPulseira()">Salvar Cor</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let todasTriagens = [];
+        let triagemEditando = null;
+        let triagemCorEditando = null;
+        let corSelecionada = 'verde';
+
+        
+        if (!localStorage.getItem('adminToken')) {
+            window.location.href = 'login.html';
+        }
+
+      
+        async function carregarTriagens() {
+            try {
+                const response = await fetch('http://localhost:3000/api/triagens');
+                todasTriagens = await response.json();
+                exibirTriagens();
+                atualizarEstatisticas();
+            } catch (error) {
+                console.error('Erro ao carregar triagens:', error);
+                document.getElementById('triagensList').innerHTML = 
+                    '<div class="empty-state">Erro ao carregar triagens</div>';
+            }
+        }
+
+        
+        function calcularPulseira(triagem) {
+   
+    if (triagem.corPulseira) {
+        return triagem.corPulseira;
+    }
+    
+    const respostas = triagem.respostas;
+    let pontos = 0;
+    
+ 
+    if (respostas['1']) {
+        if (respostas['1'].includes('Dor no peito') || 
+            respostas['1'].includes('Falta de ar') ||
+            respostas['1'].includes('Dor abdominal severa')) {
+            pontos += 3;
+        } else if (respostas['1'].includes('Febre') || 
+                  respostas['1'].includes('Tosse') ||
+                  respostas['1'].includes('Dor de cabeça')) {
+            pontos += 1;
+        }
+    }
+    
+    // PERGUNTA 2: Tempo do sintoma
+    if (respostas['2']) {
+        if (respostas['2'].includes('Mais de 3 meses') || 
+            respostas['2'].includes('Mais de 1 ano')) {
+            pontos += 2;
+        } else if (respostas['2'].includes('1 semana') || 
+                  respostas['2'].includes('2 semanas')) {
+            pontos += 1;
+        }
+    }
+    
+    // PERGUNTA 3: Intensidade
+    if (respostas['3']) {
+        if (respostas['3'].includes('Muito severa') || 
+            respostas['3'].includes('Severa')) {
+            pontos += 3;
+        } else if (respostas['3'].includes('Moderada')) {
+            pontos += 2;
+        } else if (respostas['3'].includes('Leve')) {
+            pontos += 1;
+        }
+    }
+    
+    // PERGUNTA 4: Frequência
+    if (respostas['4']) {
+        if (respostas['4'].includes('Contínuo')) {
+            pontos += 2;
+        } else if (respostas['4'].includes('Vem e vai')) {
+            pontos += 1;
+        }
+    }
+    
+    // PERGUNTA 5: Sintomas associados
+    if (respostas['5']) {
+        const sintomasGraves = ['Febre', 'Vômito', 'Tontura', 'Palpitações', 'Visão turva'];
+        const sintomas = respostas['5'].split(',').map(s => s.trim());
+        
+        sintomas.forEach(sintoma => {
+            if (sintomasGraves.includes(sintoma)) {
+                pontos += 2;
+            } else if (sintoma !== 'Nenhum') {
+                pontos += 1;
+            }
+        });
+    }
+    
+    // PERGUNTA 6: Recorrência
+    if (respostas['6']) {
+        if (respostas['6'].includes('Sempre') || 
+            respostas['6'].includes('Frequentemente')) {
+            pontos += 2;
+        } else if (respostas['6'].includes('Ocasionalmente')) {
+            pontos += 1;
+        }
+    }
+    
+    // PERGUNTA 7: Melhora com tratamento
+    if (respostas['7']) {
+        if (respostas['7'].includes('Nada melhora')) {
+            pontos += 2;
+        }
+    }
+    
+    // 🎯 DEFINIR COR BASEADO NA PONTUAÇÃO:
+    console.log(`Pontuação da triagem: ${pontos}`); // Para debug
+    
+    if (pontos >= 8) {
+        return 'vermelha';   // Alta prioridade
+    } else if (pontos >= 4) {
+        return 'amarela';    // Média prioridade  
+    } else {
+        return 'verde';      // Baixa prioridade
+    }
+}
+
+        function exibirTriagens() {
+            const container = document.getElementById('triagensList');
+            
+            if (todasTriagens.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Nenhuma triagem encontrada</h3>
+                        <p>As triagens realizadas aparecerão aqui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            
+            todasTriagens.forEach(triagem => {
+                const pulseira = calcularPulseira(triagem);
+                const data = new Date(triagem.timestamp).toLocaleString('pt-BR');
+                const sintomaPrincipal = triagem.respostas['1'] || 'Não informado';
+                
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <div>${triagem._id.substring(18)}</div>
+                    <div>${data}</div>
+                    <div>
+                        <span class="pulseira pulseira-${pulseira}"></span>
+                        ${pulseira.charAt(0).toUpperCase() + pulseira.slice(1)}
+                        ${triagem.corPulseira ? '⚙️' : ''}
+                    </div>
+                    <div>${sintomaPrincipal}</div>
+                    <div class="acoes">
+                        <button class="btn-acao btn-editar" onclick="editarTriagem('${triagem._id}')">Editar</button>
+                        <button class="btn-acao btn-cor" onclick="alterarCorPulseira('${triagem._id}')">Cor</button>
+                        <button class="btn-acao btn-excluir" onclick="excluirTriagem('${triagem._id}')">Excluir</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function atualizarEstatisticas() {
+            document.getElementById('totalTriagens').textContent = todasTriagens.length;
+            
+            const contagemPulseiras = {
+                verde: 0,
+                amarela: 0,
+                vermelha: 0,
+                preta: 0
+            };
+            
+            todasTriagens.forEach(triagem => {
+                const pulseira = calcularPulseira(triagem);
+                contagemPulseiras[pulseira]++;
+            });
+            
+            document.getElementById('triagensVerde').textContent = contagemPulseiras.verde;
+            document.getElementById('triagensAmarela').textContent = contagemPulseiras.amarela;
+            document.getElementById('triagensVermelha').textContent = contagemPulseiras.vermelha;
+        }
+
+        function editarTriagem(id) {
+            const triagem = todasTriagens.find(t => t._id === id);
+            if (!triagem) return;
+            
+            triagemEditando = triagem;
+            document.getElementById('editSintoma').value = triagem.respostas['1'] || '';
+            document.getElementById('editTempo').value = triagem.respostas['2'] || '';
+            document.getElementById('editIntensidade').value = triagem.respostas['3'] || '';
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function alterarCorPulseira(id) {
+            const triagem = todasTriagens.find(t => t._id === id);
+            if (!triagem) return;
+            
+            triagemCorEditando = triagem;
+            corSelecionada = triagem.corPulseira || calcularPulseira(triagem);
+            
+            // Marcar a cor atual como selecionada
+            document.querySelectorAll('.opcao-cor').forEach(opcao => {
+                opcao.classList.remove('selecionada');
+                if (opcao.dataset.cor === corSelecionada) {
+                    opcao.classList.add('selecionada');
+                }
+            });
+            
+            document.getElementById('corModal').style.display = 'block';
+        }
+
+        function selecionarCor(cor) {
+            corSelecionada = cor;
+            
+            // Atualizar visualmente a seleção
+            document.querySelectorAll('.opcao-cor').forEach(opcao => {
+                opcao.classList.remove('selecionada');
+                if (opcao.dataset.cor === cor) {
+                    opcao.classList.add('selecionada');
+                }
+            });
+        }
+
+        async function salvarCorPulseira() {
+            if (!triagemCorEditando) return;
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/triagens/${triagemCorEditando._id}/cor`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ corPulseira: corSelecionada })
+                });
+                
+                if (response.ok) {
+                    fecharCorModal();
+                    carregarTriagens(); // Recarregar a lista
+                } else {
+                    alert('Erro ao atualizar cor da pulseira');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar cor da pulseira');
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('editModal').style.display = 'none';
+            triagemEditando = null;
+        }
+
+        function fecharCorModal() {
+            document.getElementById('corModal').style.display = 'none';
+            triagemCorEditando = null;
+        }
+
+        async function excluirTriagem(id) {
+            if (!confirm('Tem certeza que deseja excluir esta triagem?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/triagens/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    carregarTriagens(); // Recarregar a lista
+                } else {
+                    alert('Erro ao excluir triagem');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao excluir triagem');
+            }
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!triagemEditando) return;
+            
+            try {
+                const dadosAtualizados = {
+                    ...triagemEditando.respostas,
+                    '1': document.getElementById('editSintoma').value,
+                    '2': document.getElementById('editTempo').value,
+                    '3': document.getElementById('editIntensidade').value
+                };
+                
+                const response = await fetch(`http://localhost:3000/api/triagens/${triagemEditando._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ respostas: dadosAtualizados })
+                });
+                
+                if (response.ok) {
+                    fecharModal();
+                    carregarTriagens(); // Recarregar a lista
+                } else {
+                    alert('Erro ao atualizar triagem');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar triagem');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'login.html';
+        }
+
+        // Carregar triagens quando a página abrir
+        carregarTriagens();
+    </script>
+</body>
+</html>
