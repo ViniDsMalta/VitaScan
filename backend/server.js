@@ -21,42 +21,7 @@ mongoose.connect(MONGODB_URI, {
 .catch(err => console.log('Erro ao conectar MongoDB:', err));
 
 
-app.get('/api/debug', async (req, res) => {
-  console.log('🔍 Iniciando teste de debug...');
-  
-  try {
-    // Teste 1: Conexão básica
-    const connectionState = mongoose.connection.readyState;
-    console.log('📡 Estado da conexão MongoDB:', connectionState);
-    
-    // Teste 2: Contar documentos
-    const count = await Triagem.countDocuments();
-    console.log(`📊 Total de triagens no banco: ${count}`);
-    
-    // Teste 3: Listar algumas
-    const triagens = await Triagem.find().limit(2);
-    console.log('📋 Primeiras triagens:', triagens);
-    
-    res.json({
-      status: 'success',
-      message: '✅ Backend e MongoDB funcionando!',
-      connectionState: connectionState,
-      totalTriagens: count,
-      sample: triagens,
-      timestamp: new Date()
-    });
-    
-  } catch (error) {
-    console.log('❌ ERRO NO DEBUG:', error.message);
-    res.status(500).json({
-      status: 'error',
-      message: '❌ Erro no backend',
-      error: error.message,
-      connectionState: mongoose.connection.readyState,
-      timestamp: new Date()
-    });
-  }
-});
+
 
 
 app.get('/', (req, res) => {
