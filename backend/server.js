@@ -5,6 +5,10 @@ const User = require('./models/User');
 const Triagem = require('./models/Triagens');
 
 const app = express();
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+
 app.use(cors({
   origin: [
     'http://localhost:8080',
