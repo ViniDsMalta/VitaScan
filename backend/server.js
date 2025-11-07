@@ -73,27 +73,42 @@ const PORT = 3000;
 
 
 app.post('/api/login', async (req, res) => {
+  console.log('TENTANDO LOGIN - Body recebido:', req.body);
+  
   try {
     const { username, password } = req.body;
+    console.log('Procurando usuário:', username);
     
-  
+    if (!username || !password) {
+      console.log(' Dados faltando');
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Username e password são obrigatórios' 
+      });
+    }
+    
+    // Buscar usuário
     const user = await User.findOne({ username });
+    console.log('Usuário encontrado:', user);
     
     if (!user) {
+      console.log('Usuário não encontrado');
       return res.status(401).json({ 
         success: false, 
         message: 'Usuário não encontrado' 
       });
     }
     
-    
+    // Verificar senha
     if (user.password !== password) {
+      console.log('Senha incorreta');
       return res.status(401).json({ 
         success: false, 
         message: 'Senha incorreta' 
       });
     }
     
+    console.log('Login bem-sucedido para:', username);
     res.json({ 
       success: true, 
       message: 'Login realizado com sucesso!',
@@ -101,13 +116,13 @@ app.post('/api/login', async (req, res) => {
     });
     
   } catch (error) {
+    console.log('ERRO NO LOGIN:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Erro no servidor' 
+      message: 'Erro no servidor: ' + error.message 
     });
   }
 });
-
 // criar usuario (rota só para caso de alguma merda)
 app.post('/api/create-admin', async (req, res) => {
   try {
