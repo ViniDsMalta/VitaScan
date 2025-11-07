@@ -5,7 +5,6 @@ const User = require('./models/User');
 const Triagem = require('./models/Triagens');
 
 const app = express();
-app.use(cors());
 app.use(cors({
   origin: [
     'http://localhost:8080',
@@ -71,9 +70,7 @@ app.get('/api/triagens', async (req, res) => {
 });
 
 const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+
 
 app.post('/api/login', async (req, res) => {
   try {
@@ -204,4 +201,8 @@ app.put('/api/triagens/:id/cor', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar cor da pulseira' });
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
