@@ -6,8 +6,13 @@ const Triagem = require('./models/Triagens');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
-
+app.use(cors({
+  origin: [
+    'http://localhost:8080',
+    'https://stellular-cranachan-0dc9ba.netlify.app'
+  ],
+  credentials: true
+}));
 
 const MONGODB_URI = 'mongodb+srv://viniciusmalta2503_db_user:DHMPoUPk8BUPz7nJ@cluster0.4vltf4q.mongodb.net/?appName=Cluster0';
 
