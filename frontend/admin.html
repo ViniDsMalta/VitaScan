@@ -432,7 +432,7 @@
       
         async function carregarTriagens() {
             try {
-                const response = await fetch('http://localhost:3000/api/triagens');
+                const response = await fetch(`${window.API_URL}/api/login`);
                 todasTriagens = await response.json();
                 exibirTriagens();
                 atualizarEstatisticas();
