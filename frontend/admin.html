@@ -432,7 +432,7 @@
       
         async function carregarTriagens() {
             try {
-                const response = await fetch(`${window.API_URL}/api/login`);
+                const response = await fetch(`${window.API_URL}/api/triagens`);
                 todasTriagens = await response.json();
                 exibirTriagens();
                 atualizarEstatisticas();
@@ -647,7 +647,7 @@
             if (!triagemCorEditando) return;
             
             try {
-                const response = await fetch(`http://localhost:3000/api/triagens/${triagemCorEditando._id}/cor`, {
+                const response = await fetch(`${window.API_URL}/api/triagens/${triagemCorEditando._id}/cor`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -681,7 +681,7 @@
             if (!confirm('Tem certeza que deseja excluir esta triagem?')) return;
             
             try {
-                const response = await fetch(`http://localhost:3000/api/triagens/${id}`, {
+                const response = await fetch(`${window.API_URL}/api/triagens/${id}`, {
                     method: 'DELETE'
                 });
                 
@@ -709,7 +709,7 @@
                     '3': document.getElementById('editIntensidade').value
                 };
                 
-                const response = await fetch(`http://localhost:3000/api/triagens/${triagemEditando._id}`, {
+                const response = await fetch(`${window.API_URL}/api/triagens/${triagemEditando._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

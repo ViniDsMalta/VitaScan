@@ -300,7 +300,7 @@
        
 async function enviarParaBackend(respostas) {
     try {
-        const response = await fetch(`${window.API_URL}/api/login`, {
+        const response = await fetch(`${window.API_URL}/api/triagem`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
