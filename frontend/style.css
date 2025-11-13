@@ -55,6 +55,7 @@
             padding: 8px 16px;
             border-radius: 6px;
             transition: background-color 0.3s;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .login-link:hover {
@@ -200,7 +201,8 @@
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #666;
+            /* color: #666; */
+            color: white;
         }
         
         .progress-bar {
@@ -246,6 +248,68 @@
             color: #666;
             margin-left: 10px;
         }
+
+        
+        .glass-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .triagens-table.glass-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            }
+
+
+            .table-row {
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .table-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            }
+
+            
+        .glass-container,
+        .glass-card {
+        color: white;
+        }
+
+        .glass-container h1,
+        .glass-container h2, 
+        .glass-container h3,
+        .glass-card .stat-number,
+        .glass-card .stat-label {
+        color: white;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ajuste botões para contrastar */
+        .btn-acao {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+
+        .glass-container h1,
+        .glass-container h2,
+        .glass-container p{
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+        .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        }
         
         @media (max-width: 576px) {
             .container {
@@ -259,6 +323,8 @@
             
             .login-link {
                 margin-top: 10px;
+                color: #2575fc;
+                
             }
             
             .button-container {

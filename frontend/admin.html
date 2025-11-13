@@ -13,8 +13,11 @@
         }
         
         body {
-            background: #f5f7fa;
+            /* background: #f5f7fa; */
             min-height: 100vh;
+            background: linear-gradient(135deg, #180130 0%, #011942 100%);
+            min-height: 100vh;
+            margin: 0;
         }
         
         .header {
@@ -131,10 +134,11 @@
             grid-template-columns: 100px 1fr 150px 150px 150px;
             gap: 15px;
             padding: 20px;
-            background-color: #f8f9fa;
+            /* background-color: #f8f9fa; */
             border-bottom: 1px solid #e9ecef;
             font-weight: 600;
-            color: #333;
+            color: white;
+            background: rgba(106, 17, 203, 0.1) !important;
         }
         
         .table-row {
@@ -144,6 +148,7 @@
             padding: 20px;
             border-bottom: 1px solid #e9ecef;
             align-items: center;
+            color: white;
         }
         
         .table-row:hover {
@@ -309,11 +314,29 @@
             background-color: #2575fc;
             color: white;
         }
+        .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        }
+
+        .glass-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .header.glass-container {
+        background: rgba(106, 17, 203, 0.1) !important; 
+}
     </style>
     <script src="config.js"></script>
 </head>
 <body>
-    <div class="header">
+    <div class="header glass-container">
         <div class="header-content">
             <div class="logo">
                 <h1>Dashboard Admin</h1>
@@ -327,26 +350,26 @@
     </div>
 
     <div class="container">
-        <div class="stats-cards">
-            <div class="stat-card">
+        <div class="stats-cards ">
+            <div class="stat-card glass-card">
                 <div class="stat-number" id="totalTriagens">0</div>
                 <div class="stat-label">Total de Triagens</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card glass-card">
                 <div class="stat-number" id="triagensVerde">0</div>
                 <div class="stat-label">Pulseira Verde</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card glass-card">
                 <div class="stat-number" id="triagensAmarela">0</div>
                 <div class="stat-label">Pulseira Amarela</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card glass-card">
                 <div class="stat-number" id="triagensVermelha">0</div>
                 <div class="stat-label">Pulseira Vermelha</div>
             </div>
         </div>
 
-        <div class="triagens-table">
+        <div class="triagens-table glass-container">
             <div class="table-header">
                 <div>ID</div>
                 <div>Data/Hora</div>
@@ -426,7 +449,7 @@
 
         
         if (!localStorage.getItem('adminToken')) {
-            window.location.href = 'login.html';
+             window.location.href = 'login.html';
         }
 
       
