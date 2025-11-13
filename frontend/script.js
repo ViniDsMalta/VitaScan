@@ -258,7 +258,7 @@
         const successMsg = document.createElement('div');
         successMsg.style.cssText = 'text-align: center; margin-top: 20px; padding: 15px; background: #d4edda; color: #155724; border-radius: 8px;';
         successMsg.innerHTML = `
-            <strong>✅ Triagem concluída com sucesso!</strong><br>
+            <strong>Triagem concluída com sucesso!</strong><br>
             <small>Suas respostas foram salvas no sistema.</small>
         `;
         resultsList.appendChild(successMsg);
