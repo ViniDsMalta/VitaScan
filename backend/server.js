@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
     'http://localhost:8080',
-    'https://stellular-cranachan-0dc9ba.netlify.app'
+    'https://vita-scan.netlify.app'
   ],
   credentials: true
 }));
