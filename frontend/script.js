@@ -171,40 +171,84 @@
             inputField.focus();
         }
 
-        // passar pergunta
-        nextButton.addEventListener('click', function() {
-            const answer = inputField.value.trim();
-            
-            // ver se é vazio
-            if (answer === '') {
-                showError();
-                errorMessage.textContent = "Por favor, digite uma resposta.";
-                inputField.focus();
-                return;
-            }
-            
-            // ver se existe a resposta
-            if (!isValidAnswer(answer)) {
-                showError();
-                errorMessage.textContent = "Por favor, selecione uma das opções sugeridas.";
-                inputField.focus();
-                return;
-            }
-            
-            // salvar
-            const currentQuestion = questions[currentQuestionIndex];
-            answers[currentQuestion.id] = answer;
-            
-            // Avançar para próxima pergunta ou mostrar resultados
-            if (currentQuestionIndex < questions.length - 1) {
-                currentQuestionIndex++;
-                updateQuestion();
-            } else {
-                showResults();
-            }
-        });
+        
+      nextButton.addEventListener('click', function() {
+ 
+                    const currentQuestionElement = document.querySelector('.question-container');
+                    currentQuestionElement.classList.add('question-fade-out');
+                    
+                   
+                    setTimeout(() => {
+                        const answer = inputField.value.trim();
+                        
+                        
+                        if (answer === '') {
+                            showError();
+                            errorMessage.textContent = "Por favor, digite uma resposta.";
+                            inputField.focus();
+                            currentQuestionElement.classList.remove('question-fade-out'); 
+                            return;
+                        }
+                        
+                        if (!isValidAnswer(answer)) {
+                            showError();
+                            errorMessage.textContent = "Por favor, selecione uma das opções sugeridas.";
+                            inputField.focus();
+                            currentQuestionElement.classList.remove('question-fade-out'); 
+                            return;
+                        }
+                        
+                      
+                        const currentQuestion = questions[currentQuestionIndex];
+                        answers[currentQuestion.id] = answer;
+                        
+                        
+                        if (currentQuestionIndex < questions.length - 1) {
+                            currentQuestionIndex++;
+                            updateQuestion(); 
+                            
+                            
+                            const newQuestionElement = document.querySelector('.question-container');
+                            newQuestionElement.classList.add('question-fade-in');
+                            
+                         
+                            setTimeout(() => {
+                                newQuestionElement.classList.remove('question-fade-in');
+                                currentQuestionElement.classList.remove('question-fade-out'); 
+                            }, 1000);
+                            
+                        } else {
+                            showResults();
+                        }
+                        
+                    }, 300); 
+                });
 
-        // Voltar para pergunta anterior
+// 🔙 BACK BUTTON TAMBÉM PRECISA DE ANIMAÇÃO
+backButton.addEventListener('click', function() {
+    if (currentQuestionIndex > 0) {
+        // 🎨 ANIMAÇÃO DE SAÍDA
+        const currentQuestionElement = document.querySelector('.question-container');
+        currentQuestionElement.classList.add('question-fade-out');
+        
+        setTimeout(() => {
+            // ⬅️ SEU CÓDIGO ORIGINAL
+            currentQuestionIndex--;
+            updateQuestion();
+            
+            // 🎨 ANIMAÇÃO DE ENTRADA
+            const newQuestionElement = document.querySelector('.question-container');
+            newQuestionElement.classList.add('question-fade-in');
+            
+            setTimeout(() => {
+                newQuestionElement.classList.remove('question-fade-in');
+            }, 500);
+            
+        }, 300);
+    }
+});
+
+        
         backButton.addEventListener('click', function() {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
@@ -264,7 +308,7 @@
         resultsList.appendChild(successMsg);
 }
 
-        //reiniciar
+        
         restartButton.addEventListener('click', function() {
             currentQuestionIndex = 0;
             answers = {};
@@ -277,14 +321,14 @@
             updateQuestion();
         });
 
-        // Esconder sugestões quando clicar fora
+        
         document.addEventListener('click', function(e) {
             if (!inputField.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                 hideSuggestions();
             }
         });
 
-        // Permitir envio com Enter (apenas se a resposta for válida)
+       
         inputField.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const answer = inputField.value.trim();

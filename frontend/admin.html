@@ -134,12 +134,73 @@
             border-radius: 50%;
             margin-right: 8px;
             border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
+            
         
-        .pulseira-verde { background-color: #2ecc71; }
-        .pulseira-amarela { background-color: #f39c12; }
-        .pulseira-vermelha { background-color: #e74c3c; }
-        .pulseira-preta { background-color: #2c3e50; }
+        .pulseira-verde { 
+            background-color: #2ecc71;
+            animation: pulseVerde 3s ease-in-out infinite;
+         }
+        .pulseira-amarela {
+            background-color: #f39c12;
+            animation: pulseAmarela 3s ease-in-out infinite;
+            }
+        .pulseira-vermelha {
+            background-color: #e74c3c;
+            animation: pulseVermelha 3s ease-in-out infinite; }
+        .pulseira-preta { 
+            background-color: #2c3e50; 
+            animation: pulsePreta 3s ease-in-out infinite;
+        }
+        @keyframes pulseVerde {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 10px #2ecc71;
+        }
+        50% { 
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #2ecc71, 0 0 30px #2ecc71;
+        }
+        }
+
+        @keyframes pulseAmarela {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 10px #f39c12;
+        }
+        50% { 
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #f39c12, 0 0 30px #f39c12;
+        }
+        }
+
+        @keyframes pulseVermelha {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 10px #e74c3c;
+        }
+        50% { 
+            transform: scale(1.15);
+            box-shadow: 0 0 25px #e74c3c, 0 0 40px #e74c3c;
+        }
+        }
+
+        @keyframes pulsePreta {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 10px #2c3e50;
+        }
+        50% { 
+            transform: scale(1.2);
+            box-shadow: 0 0 30px #2c3e50, 0 0 50px #2c3e50;
+        }
+        }
+        .pulseira:hover {
+            transform: scale(1.2);
+            animation-duration: 1s;
+        }
+
         
         .pulseira-selecionada {
             border: 2px solid #2575fc;
@@ -175,9 +236,9 @@
             color: white;
         }
         
-        .table-row:hover {
+        /* .table-row:hover {
             background-color: #f8f9fa;
-        }
+        } */
         
         .acoes {
             display: flex;
@@ -481,6 +542,7 @@
             try {
                 const response = await fetch(`${window.API_URL}/api/triagens`);
                 todasTriagens = await response.json();
+    
                 exibirTriagens();
                 atualizarEstatisticas();
             } catch (error) {
@@ -513,7 +575,7 @@
         }
     }
     
-    // PERGUNTA 2: Tempo do sintoma
+   
     if (respostas['2']) {
         if (respostas['2'].includes('Mais de 3 meses') || 
             respostas['2'].includes('Mais de 1 ano')) {
@@ -524,7 +586,7 @@
         }
     }
     
-    // PERGUNTA 3: Intensidade
+    
     if (respostas['3']) {
         if (respostas['3'].includes('Muito severa') || 
             respostas['3'].includes('Severa')) {
@@ -536,7 +598,7 @@
         }
     }
     
-    // PERGUNTA 4: Frequência
+    
     if (respostas['4']) {
         if (respostas['4'].includes('Contínuo')) {
             pontos += 2;
@@ -545,7 +607,7 @@
         }
     }
     
-    // PERGUNTA 5: Sintomas associados
+   
     if (respostas['5']) {
         const sintomasGraves = ['Febre', 'Vômito', 'Tontura', 'Palpitações', 'Visão turva'];
         const sintomas = respostas['5'].split(',').map(s => s.trim());
@@ -559,7 +621,7 @@
         });
     }
     
-    // PERGUNTA 6: Recorrência
+    
     if (respostas['6']) {
         if (respostas['6'].includes('Sempre') || 
             respostas['6'].includes('Frequentemente')) {
@@ -569,22 +631,22 @@
         }
     }
     
-    // PERGUNTA 7: Melhora com tratamento
+    
     if (respostas['7']) {
         if (respostas['7'].includes('Nada melhora')) {
             pontos += 2;
         }
     }
     
-    // 🎯 DEFINIR COR BASEADO NA PONTUAÇÃO:
-    console.log(`Pontuação da triagem: ${pontos}`); // Para debug
+    
+    console.log(`Pontuação da triagem: ${pontos}`); 
     
     if (pontos >= 8) {
-        return 'vermelha';   // Alta prioridade
+        return 'vermelha';   
     } else if (pontos >= 4) {
-        return 'amarela';    // Média prioridade  
+        return 'amarela';    
     } else {
-        return 'verde';      // Baixa prioridade
+        return 'verde';      
     }
 }
 
@@ -667,7 +729,7 @@
             triagemCorEditando = triagem;
             corSelecionada = triagem.corPulseira || calcularPulseira(triagem);
             
-            // Marcar a cor atual como selecionada
+            
             document.querySelectorAll('.opcao-cor').forEach(opcao => {
                 opcao.classList.remove('selecionada');
                 if (opcao.dataset.cor === corSelecionada) {
@@ -681,7 +743,7 @@
         function selecionarCor(cor) {
             corSelecionada = cor;
             
-            // Atualizar visualmente a seleção
+           
             document.querySelectorAll('.opcao-cor').forEach(opcao => {
                 opcao.classList.remove('selecionada');
                 if (opcao.dataset.cor === cor) {
@@ -704,7 +766,7 @@
                 
                 if (response.ok) {
                     fecharCorModal();
-                    carregarTriagens(); // Recarregar a lista
+                    carregarTriagens(); 
                 } else {
                     alert('Erro ao atualizar cor da pulseira');
                 }
@@ -733,7 +795,7 @@
                 });
                 
                 if (response.ok) {
-                    carregarTriagens(); // Recarregar a lista
+                    carregarTriagens(); 
                 } else {
                     alert('Erro ao excluir triagem');
                 }
@@ -766,7 +828,7 @@
                 
                 if (response.ok) {
                     fecharModal();
-                    carregarTriagens(); // Recarregar a lista
+                    carregarTriagens(); 
                 } else {
                     alert('Erro ao atualizar triagem');
                 }
@@ -781,7 +843,7 @@
             window.location.href = 'login.html';
         }
 
-        // Carregar triagens quando a página abrir
+        // Carregar triagens quando a página abrir (talvez)
         carregarTriagens();
     </script>
 </body>

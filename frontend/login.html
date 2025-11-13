@@ -111,12 +111,37 @@
         .btn-primary {
             background-color: #2575fc;
             color: white;
+            flex: 1;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
         
         .btn-primary:hover {
             background-color: #1a68e8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
         }
-        
+        .btn-primary::after{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent
+            );
+            transition: left 0.5s;
+            }
+        .btn-primary:hover::after {
+            left: 100%;  
+            }
+                    
         .error-message {
             color: #ff4757;
             text-align: center;
